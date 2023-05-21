@@ -1,0 +1,30 @@
+---Create a clothing store database
+
+CREATE TABLE inventory (id INTEGER PRIMARY KEY, name TEXT, quantity_in_stock INTEGER, price INTEGER); 
+
+INSERT INTO inventory VALUES (1, "Shirt", 102, 30);
+INSERT INTO inventory VALUES (2, "Pants", 15, 45);
+INSERT INTO inventory VALUES (3, "Shoes", 98, 80);
+INSERT INTO inventory VALUES (4, "Hats", 10, 25);
+INSERT INTO inventory VALUES (5, "Socks", 80, 10);
+INSERT INTO inventory VALUES (6, "Shorts", 60, 35);
+
+---Display the database ordered by price
+
+SELECT * FROM inventory
+ORDER BY price;
+
+---What is the average price of items?
+
+SELECT AVG(price) 
+FROM inventory;
+
+---What are the 5 items with the lowest number of stock?
+
+SELECT name, price, quantity_in_stock 
+FROM inventory
+order by quantity_in_stock desc
+LIMIT 5;
+
+
+
