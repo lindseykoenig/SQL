@@ -1,0 +1,60 @@
+CREATE TABLE famous_singers (id INTEGER PRIMARY KEY, 
+    name TEXT, 
+    age INTEGER);
+
+INSERT INTO famous_singers VALUES (1, "Joe Jonas", 33);
+INSERT INTO famous_singers VALUES (2, "Nick Jonas", 30); 
+INSERT INTO famous_singers VALUES (3, "Justin Timberlake", 42);
+INSERT INTO famous_singers VALUES (4, "Justin Bieber", 29);
+INSERT INTO famous_singers VALUES (5, "Matthew Koma", 35);
+
+CREATE TABLE famous_actors (id INTEGER PRIMARY KEY, 
+    name TEXT);
+
+INSERT INTO famous_actors VALUES (1, "Priyanka Chopra");
+INSERT INTO famous_actors VALUES (2, "Sophie Turner");
+INSERT INTO famous_actors VALUES (3, "Jessica Biel");
+INSERT INTO famous_actors VALUES (4,"Hilary Duff");
+INSERT INTO famous_actors VALUES (5, "Tom Holland");
+
+CREATE TABLE married_couples (id INTEGER PRIMARY KEY, 
+    person1_id INTEGER, 
+    person2_id INTEGER);
+
+INSERT INTO married_couples VALUES (1, 1, 2);
+INSERT INTO married_couples VALUES (2, 2, 1);
+INSERT INTO married_couples VALUES (3, 3, 3);
+INSERT INTO married_couples VALUES (4, 4, null);
+INSERT INTO married_couples VALUES (5, 5, 4);
+INSERT INTO married_couples VALUES (6, null, 5);
+
+CREATE TABLE songs (id INTEGER PRIMARY KEY,
+    name TEXT);
+    
+INSERT INTO songs VALUES (1, "Jealous");
+INSERT INTO songs VALUES (2, "Cake By The Ocean");
+INSERT INTO songs VALUES (3, "Peaches");
+INSERT INTO songs VALUES (4, "Suit & Tie");
+INSERT INTO songs VALUES (5, "Kisses Back");
+
+CREATE TABLE singers_songs (id INTEGER PRIMARY KEY, singer_id INTEGER, song_id INTEGER);
+
+INSERT INTO singers_songs VALUES (1, 1, 2);
+INSERT INTO singers_songs VALUES (2, 2, 1);
+INSERT INTO singers_songs VALUES (3, 3, 4);
+INSERT INTO singers_songs VALUES (4, 4, 3);
+INSERT INTO singers_songs VALUES (5, 5, 5);
+
+Here I created a table showing famous singers and a song of theirs.
+SELECT b.name as song, c.name as singer FROM singers_songs a
+    JOIN songs b
+    ON a.song_id=b.id
+    JOIN famous_singers c
+    ON a.singer_id= c.id;
+ 
+Here I created a table showing famous singers and famous actors who are married. 
+SELECT b.name as singer_spouse, c.name as actor_spouse FROM married_couples a
+    JOIN famous_singers b 
+    ON a.person1_id= b.id
+    JOIN famous_actors c
+    ON a.person2_id= c.id
