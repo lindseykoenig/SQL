@@ -94,28 +94,28 @@ SELECT COUNT(*) FROM superbowls
 What Superbowl games have had a winning score that is above average?
 SELECT Date, Winner, Winner_Pts FROM superbowls 
     GROUP BY Date
-    HAVING Winner_Pts>30;
+    HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls);
 What Superbowl games have had a losing score that is below average?
 SELECT Date, Winner, Loser_Pts FROM superbowls
     GROUP BY Date
-    HAVING Loser_Pts<16;
+    HAVING Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls);
 What Superbowl games have had an above average winning score and a below average losing score?
 SELECT Date, Winner, Winner_Pts, Loser_Pts FROM superbowls
     GROUP BY Winner
-    HAVING Winner_Pts>30
-    AND Loser_Pts<16;
+    HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
+    AND Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls)
 What superbowl games have had a below average winning score and an above average losing score?
 SELECT Date, Winner, Winner_Pts, Loser_Pts FROM superbowls
     GROUP BY Winner
-    HAVING Winner_Pts<30
-    AND Loser_Pts>16;
+    HAVING Winner_Pts<(SELECT AVG(Winner_Pts) FROM superbowls)
+    AND Loser_Pts>(SELECT AVG(Loser_Pts) FROM superbowls);
     
 Here I created a table that groups Superbowl winning scores by above average, belpow average, and average.
 SELECT Date, Winner, Winner_Pts,
     CASE
-        WHEN Winner_Pts>30 THEN 'above average'
-        WHEN Winner_Pts<30 THEN 'below average'
-        WHEN Winner_Pts=30 THEN 'average'
+        WHEN Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls) THEN 'above average'
+        WHEN Winner_Pts<(SELECT AVG(Winner_Pts) FROM superbowls) THEN 'below average'
+        WHEN Winner_Pts=(SELECT AVG(Winner_Pts) FROM superbowls) THEN 'average'
     END AS "Winner_Stats"
     FROM superbowls
     GROUP BY Winner_Pts;
@@ -123,9 +123,9 @@ SELECT Date, Winner, Winner_Pts,
 Here I created a table that groups Superbowl losing scores by above average, belpow average, and average.
 SELECT Date, Loser, Loser_Pts,
     CASE
-        WHEN Loser_Pts<16 THEN 'below average'
-        WHEN Loser_Pts>16 THEN 'above average'
-        WHEN Loser_Pts=16 THEN 'average'
+        WHEN Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls) THEN 'below average'
+        WHEN Loser_Pts>(SELECT AVG(Loser_Pts) FROM superbowls) THEN 'above average'
+        WHEN Loser_Pts=(SELECT AVG(Loser_Pts) FROM superbowls) THEN 'average'
     END AS "Loser_Stats"
     FROM superbowls
     GROUP BY Loser_Pts;
@@ -133,9 +133,9 @@ SELECT Date, Loser, Loser_Pts,
 How many games has Patrick Mahomes scored an above average amount of winning points and been the MVP of?
 SELECT COUNT(*) FROM superbowls
     WHERE MVP='Patrick Mahomes'
-    AND Winner_Pts>30;
+    AND Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls);
 How many games has Tom Brady scored an above average amount of winning points and been the MVP of?
 SELECT Date, Winner, Winner_Pts, MVP FROM superbowls
     GROUP BY Date
-    HAVING Winner_Pts>30
+    HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
     AND MVP='Tom Brady';
