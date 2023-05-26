@@ -94,16 +94,18 @@ SELECT COUNT(*) FROM superbowls
 What Superbowl games have had a winning score that is above average?
 SELECT Date, Winner, Winner_Pts FROM superbowls 
     GROUP BY Date
-    HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls);
+    HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
+    ORDER BY Winner_Pts desc;
 What Superbowl games have had a losing score that is below average?
 SELECT Date, Winner, Loser_Pts FROM superbowls
     GROUP BY Date
-    HAVING Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls);
+    HAVING Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls)
+    ORDER BY Loser_Pts asc;
 What Superbowl games have had an above average winning score and a below average losing score?
 SELECT Date, Winner, Winner_Pts, Loser_Pts FROM superbowls
     GROUP BY Winner
     HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
-    AND Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls)
+    AND Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls);
 What superbowl games have had a below average winning score and an above average losing score?
 SELECT Date, Winner, Winner_Pts, Loser_Pts FROM superbowls
     GROUP BY Winner
