@@ -67,52 +67,52 @@ INSERT INTO superbowls(Date,SB,Winner,Winner_Pts,Loser,Loser_Pts,MVP,Stadium,Cit
 
 SELECT * FROM superbowls;
 
-What is the average amount of winning points in a Superbowl game?
+#1. What is the average amount of winning points in a Superbowl game?
 SELECT ROUND (AVG(Winner_Pts)) FROM superbowls;
-What is the average amount of losing points in a Superbowl game?
+#2. What is the average amount of losing points in a Superbowl game?
 SELECT ROUND (AVG(Loser_Pts)) FROM superbowls;
-What is the maximum number of points scored by the winning team in a Superbowl game?
+#3. What is the maximum number of points scored by the winning team in a Superbowl game?
 SELECT MAX(Winner_Pts) FROM superbowls;
-What is the minimum number of points scored by the winning team in a Superbowl game?
+#4. What is the minimum number of points scored by the winning team in a Superbowl game?
 SELECT MIN(Winner_Pts) FROM superbowls;
-What is the maximum number of points scored by the losing team in a Superbowl game?
+#5. What is the maximum number of points scored by the losing team in a Superbowl game?
 SELECT MAX(Loser_Pts) FROM superbowls;
-What is the minimum number of points scored by the losing team in a Superbowl game?
+#6. What is the minimum number of points scored by the losing team in a Superbowl game?
 SELECT MIN(Loser_Pts) FROM superbowls;
 
-What is the average amount of points the Kansas City Chiefs score in a winning Superbowl game?
+#7. What is the average amount of points the Kansas City Chiefs score in a winning Superbowl game?
 SELECT AVG(Winner_Pts) FROM superbowls
     WHERE Winner='Kansas City Chiefs';
 
-How many times has Tom Brady been a Superbowl MVP?
+#8. How many times has Tom Brady been a Superbowl MVP?
 SELECT COUNT(*) FROM superbowls 
     WHERE MVP='Tom Brady';
-How many times has Patrick Mahomes been a Superbowl MVP?
+#9. How many times has Patrick Mahomes been a Superbowl MVP?
 SELECT COUNT(*) FROM superbowls
     WHERE MVP='Patrick Mahomes';
 
-What Superbowl games have had a winning score that is above average?
+#10. What Superbowl games have had a winning score that is above average?
 SELECT Date, Winner, Winner_Pts FROM superbowls 
     GROUP BY Date
     HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
     ORDER BY Winner_Pts desc;
-What Superbowl games have had a losing score that is below average?
+#11. What Superbowl games have had a losing score that is below average?
 SELECT Date, Winner, Loser_Pts FROM superbowls
     GROUP BY Date
     HAVING Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls)
     ORDER BY Loser_Pts asc;
-What Superbowl games have had an above average winning score and a below average losing score?
+#12. What Superbowl games have had an above average winning score and a below average losing score?
 SELECT Date, Winner, Winner_Pts, Loser_Pts FROM superbowls
     GROUP BY Winner
     HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
     AND Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls);
-What superbowl games have had a below average winning score and an above average losing score?
+#13. What superbowl games have had a below average winning score and an above average losing score?
 SELECT Date, Winner, Winner_Pts, Loser_Pts FROM superbowls
     GROUP BY Winner
     HAVING Winner_Pts<(SELECT AVG(Winner_Pts) FROM superbowls)
     AND Loser_Pts>(SELECT AVG(Loser_Pts) FROM superbowls);
     
-Here I created a table that groups Superbowl winning scores by above average, belpow average, and average.
+#14. Here I created a table that groups Superbowl winning scores by above average, belpow average, and average.
 SELECT Date, Winner, Winner_Pts,
     CASE
         WHEN Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls) THEN 'above average'
@@ -122,7 +122,7 @@ SELECT Date, Winner, Winner_Pts,
     FROM superbowls
     GROUP BY Winner_Pts;
 
-Here I created a table that groups Superbowl losing scores by above average, belpow average, and average.
+#15. Here I created a table that groups Superbowl losing scores by above average, belpow average, and average.
 SELECT Date, Loser, Loser_Pts,
     CASE
         WHEN Loser_Pts<(SELECT AVG(Loser_Pts) FROM superbowls) THEN 'below average'
@@ -132,11 +132,11 @@ SELECT Date, Loser, Loser_Pts,
     FROM superbowls
     GROUP BY Loser_Pts;
 
-How many games has Patrick Mahomes scored an above average amount of winning points and been the MVP of?
+#16. How many games has Patrick Mahomes scored an above average amount of winning points and been the MVP of?
 SELECT COUNT(*) FROM superbowls
     WHERE MVP='Patrick Mahomes'
     AND Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls);
-How many games has Tom Brady scored an above average amount of winning points and been the MVP of?
+#17. How many games has Tom Brady scored an above average amount of winning points and been the MVP of?
 SELECT Date, Winner, Winner_Pts, MVP FROM superbowls
     GROUP BY Date
     HAVING Winner_Pts>(SELECT AVG(Winner_Pts) FROM superbowls)
