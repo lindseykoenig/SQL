@@ -1,0 +1,75 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL. 
+
+#1. What is the average popularity, danceability, energy, and duration by artist and track?
+SELECT artist_name, track_name, avg(popularity), avg(danceability), avg(energy), avg(duration_ms)
+FROM BIT_DB.spotifydata
+GROUP BY artist_name, track_name;
+
+#2. Who are the top 10 artists by popularity?
+SELECT artist_name
+FROM BIT_DB.Spotifydata
+ORDER BY popularity desc
+LIMIT 10;
+
+#3. List all of Doja Cat's songs ranked in Spotify's 2021 Top 50 songs. 
+SELECT distinct artist_name, track_name
+FROM BIT_DB.Spotifydata
+WHERE artist_name= 'Doja Cat'
+ORDER BY track_name asc;
+
+#4. List all songs and their artists that were above average in popularity?
+SELECT artist_name, track_name
+FROM BIT_DB.Spotifydata
+WHERE popularity> (SELECT avg(popularity)FROM BIT_DB.Spotifydata);
+
+#5. What's the average danceability for the 10 most popular songs?
+SELECT AVG(danceability)
+FROM BIT_DB.Spotifydata
+WHERE track_name IN (SELECT track_name FROM BIT_DB.Spotifydata ORDER BY popularity desc LIMIT 10); 
+
+#6. What artist released the longest song?
+SELECT artist_name as Artist, track_name as Song, duration_ms
+FROM BIT_DB.Spotifydata
+WHERE duration_ms=(SELECT MAX(duration_ms) FROM BIT_DB.Spotifydata);
+
+#7. Which 2 artists had the most songs on the 2021 Top 50 charts and how many songs did they have?
+SELECT artist_name, COUNT(artist_name) as value_occurence
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+ORDER BY value_occurence desc
+LIMIT 2;
+
+#8. Which song key occured most often out of the 2021 Top 50 charts?
+SELECT song_key, COUNT(song_key) as value_occurence
+FROM BIT_DB.Spotifydata
+GROUP BY song_key
+ORDER BY value_occurence desc
+LIMIT 1;
