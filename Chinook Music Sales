@@ -1,0 +1,222 @@
+--In this SQL, I'm querying a database with multiple tables in it to quantify statistics about music sales.
+
+--#1. Show Customers (their full names, customer ID, and country) who are not in the US.
+SELECT customerID, LastName, FirstName, Country FROM chinook.customers
+WHERE Country <> 'USA'
+ORDER BY Country asc;
+
+--#2. Show only the Customers from Brazil.
+SELECT customerID, LastName, FirstName, Country FROM chinook.customers
+WHERE Country ='Brazil';
+
+
+--#3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT cust.LastName, cust.FirstName, invoice.invoiceid, invoice.InvoiceDate, invoice.BillingCountry
+FROM chinook.customers cust
+LEFT JOIN chinook.invoices invoice
+ON cust.customerID=invoice.customerID
+WHERE cust.Country= 'Brazil'
+ORDER BY cust.LastName asc;
+
+--#4. Show the Employees who are Sales Agents.
+SELECT Employeeid, LastName, FirstName, Title FROM chinook.employees
+WHERE Title='Sales Support Agent';
+
+--#5. Find a unique/distinct list of billing countries from the Invoice table.
+SELECT distinct BillingCountry FROM chinook.invoices
+ORDER BY BillingCountry asc;
+
+--#6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+SELECT employee.LastName, employee.Firstname, invoice.InvoiceId
+FROM chinook.Employees employee
+JOIN chinook.Customers customer 
+ON customer.SupportRepId = employee.EmployeeId
+JOIN chinook.Invoices invoice 
+ON invoice.CustomerId = customer.CustomerId;
+
+--#7. Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT employee.LastName, employee.Firstname, customer.FirstName, customer.LastName, customer.Country, invoice.total
+FROM chinook.employees employee
+JOIN chinook.Customers customer 
+ON customer.SupportRepId = employee.EmployeeId
+JOIN chinook.Invoices invoice 
+ON invoice.CustomerId = customer.CustomerId; 
+
+--#8. How many Invoices were there in 2009?
+SELECT COUNT(*) FROM chinook.invoices
+WHERE invoicedate LIKE "2009%";
+
+--#9. What are the total sales for 2009?
+SELECT SUM(total) as total_sales
+FROM chinook.invoices
+WHERE invoicedate LIKE "2009%";
+
+--10. Write a query that includes the purchased track name with each invoice line ID.
+SELECT track.name, invoice.InvoiceLineid
+FROM chinook.tracks track
+JOIN chinook.invoice_items invoice
+ON invoice.trackid=track.trackid;
+
+--#11. Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT track.name as Track, artist.name as Artist, invoice.invoicelineid
+FROM chinook.tracks track
+JOIN chinook.invoice_items invoice
+ON track.trackid=invoice.trackid
+JOIN chinook.albums album
+ON album.albumid=track.albumid
+JOIN chinook.artists artist
+ON album.artistID=artist.artistID;
+
+--#12. Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+SELECT track.Name as Track, album.Title AS Album, type.Name AS Media_Type, genre.Name AS Genre
+FROM chinook.tracks track
+JOIN chinook.Albums album
+on album.AlbumId = track.AlbumId
+JOIN chinook.Media_Types type
+on type.MediaTypeId = track.MediaTypeId
+JOIN chinook.Genres genre
+on genre.GenreId = track.GenreId;
+
+--#13. Show the total sales made by each sales agent.
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+GROUP BY employee.LastName;
+
+--#14. Which sales agent made the most dollars in sales in 2009?
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+AND invoice.invoicedate LIKE "2009%"
+GROUP BY employee.LastName
+ORDER BY ROUND(SUM(invoice.total), 2) desc
+LIMIT 1;
+
+--#15. Which sales agent made the least dollars in sales in 2009?
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+AND invoice.invoicedate LIKE "2009%"
+GROUP BY employee.LastName
+ORDER BY ROUND(SUM(invoice.total), 2) asc
+LIMIT 1;
+
+--#16. Which sales agent made the most dollars in sales in total?
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+GROUP BY employee.LastName
+ORDER BY ROUND(SUM(invoice.total), 2) desc 
+LIMIT 1;
+
+--#17. Which sales agent made the least dollars in sales in total?
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+GROUP BY employee.LastName
+ORDER BY ROUND(SUM(invoice.total), 2) asc
+LIMIT 1;
+
+--#18. How many invoices were there in 2010?
+SELECT COUNT(*) FROM chinook.invoices
+WHERE invoicedate LIKE "2010%";
+
+--#19. Which employee made the most dollars in sales in 2010?
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+AND invoice.invoicedate LIKE "2010%"
+GROUP BY employee.LastName
+ORDER BY ROUND(SUM(invoice.total), 2) desc
+LIMIT 1;
+
+--#20. Which employee made the least dollars in sales in 2010?
+SELECT employee.LastName, employee.FirstName, ROUND(SUM(invoice.total), 2) as 'Total Sales'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+AND invoice.invoicedate LIKE "2010%"
+GROUP BY employee.LastName
+ORDER BY ROUND(SUM(invoice.total), 2) asc
+LIMIT 1;
+
+--#21. What is the average dollar amount made per sale for each employee?
+SELECT employee.LastName, employee.FirstName, ROUND(AVG(invoice.total), 2) as 'AVG Sale'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+GROUP BY employee.LastName
+ORDER BY ROUND(AVG(invoice.total), 2) desc;
+
+--#22. On average, which employee makes the most amount of money per sale?
+SELECT employee.LastName, employee.FirstName, ROUND(AVG(invoice.total), 2) as 'AVG Sale'
+FROM chinook.invoices invoice
+JOIN chinook.customers customer
+ON customer.customerid=invoice.customerid
+JOIN chinook.employees employee
+ON employee.employeeid=customer.supportrepid
+WHERE employee.title= 'Sales Support Agent'
+GROUP BY employee.LastName
+ORDER BY ROUND(AVG(invoice.total), 2) asc
+LIMIT 1;
+
+--#23. Which track has the highest number of sales
+SELECT track.name as Track, SUM(item.invoiceid) as 'Total Track Sales'
+FROM chinook.tracks track
+JOIN chinook.invoice_items item
+ON track.trackid=item.trackid
+GROUP BY Track
+ORDER BY SUM(item.invoiceid) desc
+LIMIT 1;
+
+--#24. Which track has the lowest number of sales?
+SELECT track.name as Track, SUM(item.invoiceid) as 'Total Track Sales'
+FROM chinook.tracks track
+JOIN chinook.invoice_items item
+ON track.trackid=item.trackid
+GROUP BY Track
+ORDER BY SUM(item.invoiceid) asc
+LIMIT 1;
+
+--#25. Which artist has the highest number of sales?
+SELECT artist.name as Artist, SUM(item.invoiceid) as 'Total Artist Sales'
+FROM chinook.tracks track
+JOIN chinook.invoice_items item
+ON track.trackid=item.trackid
+JOIN chinook.albums album
+ON album.albumid=track.albumid
+JOIN chinook.artists artist
+ON artist.artistid=album.artistid
+GROUP BY Artist
+ORDER BY SUM(item.invoiceid) desc
+LIMIT 1;
